@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Account_01",
+        "wallet_address": "ARW88Hy........",
+        "email": "....",
+        "proxy": "http://user:pass@ip:port"
+    },
+    {
+        "name": "Account_02",
+        "wallet_address": "ARW5mx......",
+        "email": "...."
+        "proxy": "http://user:pass@ip:port"
+    }
+]
