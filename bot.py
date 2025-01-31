@@ -1,4 +1,3 @@
-
 import json
 import time
 import random
@@ -22,9 +21,9 @@ init(autoreset=True)
     '颜色主题': {
         '地址': Fore.CYAN,
         '数值': Fore.YELLOW,
-        '时间': Fore.LIGHTBLACK_EX,  # 这里使用 LIGHTBLACK_EX 来代替 GRAY
+        '时间': Fore.LIGHTBLACK_EX,  
         '强调': Fore.GREEN,
-        '次要': Fore.LIGHTBLACK_EX  # 这里也使用 LIGHTBLACK_EX
+        '次要': Fore.LIGHTBLACK_EX 
     }
 }
 
@@ -110,7 +109,7 @@ class 链操作:
             "is_mobile": "Y"
         }
 
-        # 根据接口类型设置参数
+       
         if 接口类型 == 'auth':
             基础参数.update({"email": self.用户['email']})
         elif 接口类型 in ('checkin', 'quiz', 'answer'):
@@ -120,13 +119,22 @@ class 链操作:
             基础参数.update(附加参数)
 
         try:
-            响应 = requests.post(
-                url=请求地址,
-                headers=self.请求头,
-                data=基础参数,
-                proxies=self.代理,
-                timeout=15
-            )
+           
+            if self.代理:
+                响应 = requests.post(
+                    url=请求地址,
+                    headers=self.请求头,
+                    data=基础参数,
+                    proxies=self.代理,
+                    timeout=15
+                )
+            else:
+                响应 = requests.post(
+                    url=请求地址,
+                    headers=self.请求头,
+                    data=基础参数,
+                    timeout=15  
+                )
             return 响应.json() if 响应.status_code == 200 else None
         except Exception as 异常:
             日志记录器.记录(f"请求异常: {异常}", Fore.RED)
@@ -137,7 +145,7 @@ def 执行用户任务(用户配置):
     日志记录器.记录(f"开始处理用户: {用户配置['name']}", Fore.YELLOW, True)
 
     # 代理检测
-    if 'proxy' in 用户配置 and 用户配置['proxy']:  # 只有在代理字段不为空时才进行代理验证
+    if 'proxy' in 用户配置 and 用户配置['proxy']:  
         ip, 城市, 国家 = 代理管理器.验证代理(用户配置['proxy'])
         if ip:
             日志记录器.记录(f"代理状态正常 | 位置: {国家}-{城市}", Fore.CYAN)
@@ -148,7 +156,7 @@ def 执行用户任务(用户配置):
         日志记录器.记录("没有配置代理，跳过代理验证", Fore.YELLOW)
 
     # 初始化API客户端
-    客户端 = 链操作(用户配置, 用户配置.get('proxy'))  # 如果没有代理，则传递 None
+    客户端 = 链操作(用户配置, 用户配置.get('proxy')) 
 
     # 身份验证
     if 认证结果 := 客户端.执行请求('auth'):
